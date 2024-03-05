@@ -12,23 +12,6 @@
 // }
 // getNameFromAuth();
 
-// Function to read the quote of the day from Firestore "quotes" collection
-// Input param is the String representing the day of the week, aka, the document name
-function readQuote(day) {
-    db.collection("quotes").doc(day)                                                      //name of the collection and documents should matach excatly with what you have in Firestore
-      .onSnapshot(dayDoc => {                                                               //arrow notation
-           console.log("current document data: " + dayDoc.data());                          //.data() returns data object
-           document.getElementById("quote-goes-here").innerHTML = dayDoc.data().quote;      //using javascript to display the data on the right place
-           
-           //Here are other ways to access key-value data fields
-           //$('#quote-goes-here').text(dayDoc.data().quote);         //using jquery object dot notation
-           //$("#quote-goes-here").text(dayDoc.data()["quote"]);      //using json object indexing
-		       //document.querySelector("#quote-goes-here").innerHTML = dayDoc.data().quote;
-      })
-}
-readQuote("tuesday");        //calling the function
-
-
 function insertNameFromFirestore() {
     // Check if the user is logged in:
     firebase.auth().onAuthStateChanged(user => {
@@ -49,6 +32,22 @@ function insertNameFromFirestore() {
 }
 
 insertNameFromFirestore();
+
+// Function to read the quote of the day from Firestore "quotes" collection
+// Input param is the String representing the day of the week, aka, the document name
+function readQuote(day) {
+    db.collection("quotes").doc(day)                                                      //name of the collection and documents should matach excatly with what you have in Firestore
+      .onSnapshot(dayDoc => {                                                               //arrow notation
+           console.log("current document data: " + dayDoc.data());                          //.data() returns data object
+           document.getElementById("quote-goes-here").innerHTML = dayDoc.data().quote;      //using javascript to display the data on the right place
+           
+           //Here are other ways to access key-value data fields
+           //$('#quote-goes-here').text(dayDoc.data().quote);         //using jquery object dot notation
+           //$("#quote-goes-here").text(dayDoc.data()["quote"]);      //using json object indexing
+		       //document.querySelector("#quote-goes-here").innerHTML = dayDoc.data().quote;
+    })
+}
+readQuote("tuesday");        //calling the function
 
 
 function writeHikes() {
@@ -96,7 +95,7 @@ function writeHikes() {
     });
 }
 
-writeHikes();
+// writeHikes();
 
 
 //------------------------------------------------------------------------------
@@ -111,8 +110,9 @@ function displayCardsDynamically(collection) {
             allHikes.forEach(doc => { //iterate thru each doc
                 var title = doc.data().name;       // get value of the "name" key
                 var details = doc.data().details;  // get value of the "details" key
-								var hikeCode = doc.data().code;    //get unique ID to each hike to be used for fetching right image
+				var hikeCode = doc.data().code;    //get unique ID to each hike to be used for fetching right image
                 var hikeLength = doc.data().length; //gets the length field
+                var docID = doc.id;                 //get the unique ID of the document
                 let newcard = cardTemplate.content.cloneNode(true); // Clone the HTML template to create a new card (newcard) that will be filled with Firestore data.
 
                 //update title and text and image
@@ -120,6 +120,7 @@ function displayCardsDynamically(collection) {
                 newcard.querySelector('.card-length').innerHTML = hikeLength +"km";
                 newcard.querySelector('.card-text').innerHTML = details;
                 newcard.querySelector('.card-image').src = `./images/${hikeCode}.jpg`; //Example: NV01.jpg
+                newcard.querySelector('a').href = "eachHike.html?docID="+docID;
 
                 //Optional: give unique ids to all elements for future use
                 // newcard.querySelector('.card-title').setAttribute("id", "ctitle" + i);
