@@ -60,7 +60,7 @@ function writeHikes() {
         city: "Burnaby",
         province: "BC",
         level: "easy",
-				details: "A lovely place for lunch walk",
+		details: "A lovely place for lunch walk",
         length: 10,          //number value
         hike_time: 60,       //number value
         lat: 49.2467097082573,
